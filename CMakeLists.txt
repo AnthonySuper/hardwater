@@ -6,11 +6,13 @@ enable_testing()
 
 set(PROJECT_SRCS
   src/mapped_file.cpp
-  src/file_chunk.cpp)
+  src/fragment_hash.cpp
+  src/ion.cpp)
 
 set(PROJECT_HEADERS
   include/mapped_file.hpp
-  include/file_chunk.hpp)
+  include/fragment_hash.hpp
+  include/ion.hpp)
 
 
 add_executable(app app.cpp
