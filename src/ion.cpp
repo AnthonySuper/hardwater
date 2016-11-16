@@ -1,6 +1,13 @@
 #include "ion.hpp"
 
 namespace Hardwater {
+    
+    Ion::Ion() :
+    file(nullptr), overallHash(nullptr)
+    {
+        
+    }
+    
     Ion::Ion(std::unique_ptr<MappedFile>&& f) :
     file(std::move(f))
     {
@@ -39,6 +46,47 @@ namespace Hardwater {
             chunkSize = ((chunkSize + multiple - 1) / multiple) * multiple;
         }
     }
+    
+    void Ion::createChunks(const std::vector<FragmentHash> &hashes)
+    {
+        if(chunks.size() > 0) {
+            throw std::runtime_error("We already have chunks");
+        }
+        if(hashes.size() != getNumChunks()) {
+            throw std::runtime_error("Mismatch on chunk numbers");
+        }
+        for(int i = 0; i < hashes.size(); ++i) {
+            chunks.emplace_back(hashes.at(i));
+            auto b = getChunkBoundary(i);
+            chunks.at(i).addFile(b.first, b.second);
+        }
+    }
+    
+    
+    std::pair<MappedFile::iterator, MappedFile::iterator>
+    Ion::getChunkBoundary(int chunkNum)
+    {
+        checkFile();
+        auto b = file->begin() + (chunkNum * chunkSize);
+        if(chunkNum == getNumChunks() - 1) {
+            auto e = file->end();
+            return std::make_pair(b, e);
+        }
+        auto e = b + chunkSize;
+        return std::make_pair(b, e);
+    }
+    
+    bool Ion::checkValidity() {
+        checkFile();
+        return FragmentHash(file->begin(), file->end()) == *overallHash;
+    }
+    
+    void Ion::checkFile() {
+        if(file == nullptr) {
+            throw std::runtime_error("File is a null pointer");
+        }
+    }
+    
     
     
 }

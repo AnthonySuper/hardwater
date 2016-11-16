@@ -13,6 +13,8 @@ namespace Hardwater {
         FragmentHash(MappedFile::const_iterator begin, 
                 MappedFile::const_iterator end);
         std::string getDigest();
+        bool operator==(const FragmentHash& o);
+        
     protected:
         std::array<unsigned char, SHA256_DIGEST_LENGTH> hash;
     };

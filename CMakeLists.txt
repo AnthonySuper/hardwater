@@ -7,12 +7,14 @@ enable_testing()
 set(PROJECT_SRCS
   src/mapped_file.cpp
   src/fragment_hash.cpp
-  src/ion.cpp)
+  src/ion.cpp
+  src/chunk.cpp)
 
 set(PROJECT_HEADERS
   include/mapped_file.hpp
   include/fragment_hash.hpp
-  include/ion.hpp)
+  include/ion.hpp
+  include/chunk.hpp)
 
 
 add_executable(app app.cpp

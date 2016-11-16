@@ -6,6 +6,7 @@
 #include <string>
 #include <cstdint>
 #include <stdexcept>
+#include <sys/stat.h>
 
 namespace Hardwater {
     class MappedFile {
@@ -14,9 +15,8 @@ namespace Hardwater {
         using const_iterator = uint8_t const *;
         MappedFile& operator=(const MappedFile&) = delete;
         MappedFile(const MappedFile&) = delete;
-        MappedFile(std::string fname, const char *mode = "r+");
-        MappedFile(FILE *fp);
-        inline size_t getSize() { return size; }
+        MappedFile(std::string fname, size_t size = 0);
+        inline size_t getSize() const { return size; }
 
         inline uint8_t getByte(size_t offset) {
             if(offset > size) {

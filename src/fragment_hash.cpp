@@ -18,4 +18,9 @@ namespace Hardwater {
         }
         return ss.str();
     }
+    
+    bool FragmentHash::operator==(const Hardwater::FragmentHash &o)
+    {
+        return hash == o.hash;
+    }
 }

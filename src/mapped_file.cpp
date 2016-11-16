@@ -1,26 +1,44 @@
 #include "mapped_file.hpp"
+#include <iostream>
 
 namespace Hardwater {
-    MappedFile::MappedFile(FILE *f) :
-    fp(f) 
+    
+    MappedFile::MappedFile(std::string str, size_t s)
     {
+        std::cout << str << std::endl;
+        fp = fopen(str.c_str(), "r+");
         if(fp == nullptr) {
-            throw std::runtime_error("Null file passed");
+            if(errno == ENOENT) {
+                fp = fopen(str.c_str(),"w+");
+            }
+            if(fp == nullptr) {
+                throw std::runtime_error("File is non-existant and cannot be created");
+            }
         }
-        fseek(fp, 0, SEEK_END);
-        size = ftell(fp);
-        fseek(fp, 0, SEEK_SET);
+        if(s == 0) {
+            struct stat st;
+            fstat(fileno(fp), &st);
+            size = st.st_size;
+        }
+        else {
+            size = s;
+            // allocate space for the file
+            fseek(fp, size, SEEK_SET);
+            fputc('\0', fp);
+            fseek(fp, 0, SEEK_SET);
+        }
         mapped_mem = mmap(nullptr,
-                size,
-                PROT_READ | PROT_WRITE,
-                MAP_PRIVATE,
-                fileno(fp),
-                0);
-    }
+                          size,
+                          PROT_READ | PROT_WRITE,
+                          MAP_SHARED,
+                          fileno(fp),
+                          0);
+        if(mapped_mem == reinterpret_cast<void *>(-1)) {
+            perror("Recieved an error in mmap");
+            throw std::runtime_error("MMap failure");
+        }
 
-    MappedFile::MappedFile(std::string s, const char *mode) : 
-        MappedFile(fopen(s.c_str(), mode))
-    {}
+    }
 
     MappedFile::~MappedFile()
     {
