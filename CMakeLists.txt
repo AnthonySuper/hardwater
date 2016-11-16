@@ -19,7 +19,7 @@ add_executable(app app.cpp
 
 find_package(OpenSSL REQUIRED)
 include_directories(${OPENSSL_INCLUDE_DIR})
-target_link_libraries(app ${OPENSSL_LIBRARY})
+target_link_libraries(app ${OPENSSL_LIBRARIES})
 
 include_directories(include/)
 
