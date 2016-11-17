@@ -12,9 +12,9 @@ namespace Hardwater {
     
     std::string FragmentHash::getDigest() {
         std::stringstream ss;
-        ss << std::hex << std::fixed << std::setw(2);
+        ss << std::hex << std::setfill('0');
         for(auto c: hash) {
-            ss << static_cast<int>(c);
+            ss << std::setw(2) << static_cast<int>(c);
         }
         return ss.str();
     }

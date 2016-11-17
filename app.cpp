@@ -2,6 +2,7 @@
 #include "mapped_file.hpp"
 #include "ion.hpp"
 #include <iostream>
+#include "key.hpp"
 #include "openssl/rsa.h"
 #include <openssl/conf.h>
 #include <openssl/err.h>
