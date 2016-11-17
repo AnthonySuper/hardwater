@@ -18,7 +18,7 @@ namespace Hardwater {
             ReadError(std::string err) : runtime_error(err) {}
         };
         
-        Key(std::string pathname, KeyType type, std::string password);
+        Key(std::string pathname, KeyType type, const char *password);
     private:
         KeyType type;
         std::shared_ptr<RSA> rsa;
