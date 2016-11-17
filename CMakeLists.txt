@@ -37,7 +37,8 @@ include_directories(lib/)
 
 
 set(PROJECT_TEST_SRCS
-  test_srcs/ion_test.cpp)
+  test_srcs/ion_test.cpp
+  test_srcs/key_test.cpp)
 
 add_executable(catch_test test_srcs/main.cpp 
   ${PROJECT_SRCS}
