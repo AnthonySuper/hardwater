@@ -18,7 +18,7 @@ int main(int argc, const char ** argv) {
         cerr << "Need a file name argument" << endl;
         return -1;
     }
-     */
+    */
     auto m = std::make_unique<Hardwater::MappedFile>("kobold.png");
     Hardwater::Ion i(std::move(m));
     i.generate();

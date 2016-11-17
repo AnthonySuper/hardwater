@@ -9,8 +9,16 @@
 namespace Hardwater {
     class Ion {
     public:
+        /**
+         * Create an ion from an existing mapped file.
+         */
         Ion(std::unique_ptr<MappedFile>&& f);
+        
+        /**
+         * Create an empty ion, typically used to
+         */
         Ion();
+        
         inline const MappedFile& getFile() { return *file; }
         
         inline ssize_t getChunkSize() const { return chunkSize; }
