@@ -12,7 +12,7 @@ namespace Hardwater {
                 fp = fopen(str.c_str(),"w+");
             }
             if(fp == nullptr) {
-                throw std::runtime_error("File is non-existant and cannot be created");
+                throw std::runtime_error("File creation failed!");
             }
         }
         if(s == 0) {
@@ -26,6 +26,9 @@ namespace Hardwater {
             fseek(fp, size, SEEK_SET);
             fputc('\0', fp);
             fseek(fp, 0, SEEK_SET);
+        }
+        if(size == 0) {
+            throw std::invalid_argument("Size of file is zero");
         }
         mapped_mem = mmap(nullptr,
                           size,

@@ -8,13 +8,17 @@ set(PROJECT_SRCS
   src/mapped_file.cpp
   src/fragment_hash.cpp
   src/ion.cpp
-  src/chunk.cpp)
+  src/chunk.cpp
+  src/solution.cpp
+  src/key.cpp)
 
 set(PROJECT_HEADERS
   include/mapped_file.hpp
   include/fragment_hash.hpp
   include/ion.hpp
-  include/chunk.hpp)
+  include/chunk.hpp
+  include/solution.hpp
+  include/key.hpp)
 
 
 add_executable(app app.cpp

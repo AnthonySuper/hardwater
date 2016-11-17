@@ -2,6 +2,10 @@
 #include "mapped_file.hpp"
 #include "ion.hpp"
 #include <iostream>
+#include "openssl/rsa.h"
+#include <openssl/conf.h>
+#include <openssl/err.h>
+#include <openssl/evp.h>
 
 void checkHashes(const std::vector<Hardwater::Chunk> &chunks) {
     for(int i = 0; i < chunks.size(); ++i) {
@@ -13,6 +17,7 @@ int main(int argc, const char ** argv) {
     using std::cerr;
     using std::cout;
     using std::endl;
+    OpenSSL_add_all_algorithms();
     /*
     if(argc < 2) {
         cerr << "Need a file name argument" << endl;
