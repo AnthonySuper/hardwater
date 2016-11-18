@@ -24,7 +24,7 @@ Hardwater works by transferring Ions around.
 Ions can be added to a solution by anybody with the *solution private key* (nodes which we will now call  "Owner Nodes")
 The Ion is split into chunks of equal length.
 
-The adding node then generates a 248-bit random string.
+The adding node then generates a 256-bit random string.
 This string is the *Ion Key*.
 The node then generates an *encrypted Ion file* using this key.
 It does this by encrypting each chunk, taking the hash of the encrypted data, and storing it.
