@@ -19,12 +19,12 @@ int main(int argc, const char ** argv) {
     using std::cout;
     using std::endl;
     OpenSSL_add_all_algorithms();
+    Hardwater::Key key("test_files/keys/generic.pem", Hardwater::Key::KeyType::Private, "passphrase");
+    RSA *r = key.getKey();
+    auto res = RSA_size(r);
+    std::cout << "Rsa size is " << res << std::endl;
+    return 0;
     /*
-    if(argc < 2) {
-        cerr << "Need a file name argument" << endl;
-        return -1;
-    }
-    */
     auto m = std::make_unique<Hardwater::MappedFile>("kobold.png");
     Hardwater::Ion i(std::move(m));
     i.generate();
@@ -57,4 +57,5 @@ int main(int argc, const char ** argv) {
     std::cout << "Check validty again: " << other.checkValidity() << endl;
     checkHashes(other.getChunks());
     return 0;
+    */
 }

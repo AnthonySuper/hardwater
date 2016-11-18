@@ -21,18 +21,42 @@ This makes it possible for companies or people to provide server-space for users
 
 ## How it works
 Hardwater works by transferring Ions around.
-Each Ion splits itself into a given number of *chunks*, which are small segments of data.
-Each chunk is identified by a hair of hashes: the encrypted hash, which is the hash of the data when encrypted to the solution's private key, and the unencrypted hash, which is the hash of the data when it is decrypted.
-The Ion itself is identified by a creation time and a file path, as well as a pair of "overall" encrypted and unencrypted hashes.
+Ions can be added to a solution by anybody with the *solution private key* (nodes which we will now call  "Owner Nodes")
+The Ion is split into chunks of equal length.
 
-Ions are transferred chunk by chunk between nodes in the solution, with only encrypted data being transferred.
-Ions find each other using a tracker, and then communicate between each other to maximize the availability of each chunk.
-If a node with the private key modifies or adds an Ion, it tells the other nodes and transfers the new Ion to all of them.
-The other nodes can verify that this information is correct because it is signed with the private key.
+The adding node then generates a 248-bit random string.
+This string is the *Ion Key*.
+The node then generates an *encrypted Ion file* using this key.
+It does this by encrypting each chunk, taking the hash of the encrypted data, and storing it.
+It must also store the *size* of every chunk, as Encryption can create chunks of varying size (note: not sure if this is actually the case, if it isn't this can be skipped, since chunk size is public).
+It also encrypts the *Ion Key* with the *Solution Private Key*.
+It stores all this information in the format described in the [Ioncrypt file format](#ioncrypt-file-format)
 
-I have little idea of what to do if the same Ion is modified at the same time by two different nodes.
-In this case it is possible that we can recognize the conflict and create two files with random numbers after their file names, letting the user choose between them.
-Alternatively, we could just say that the "last modification wins", which may be a bad idea.
+*Dissolution* can now begin.
+The node sends the Encrypted Ion File out to all other nodes registered with the public key.
+The Ions make contact, and transfer each chunk (encrypted with the ion key) between each other in a way to maximize total availability of each chunk.
+Nodes use the hashes to encrypt the files.
 
+Owner nodes can then use their private key to decrypt the *Ion Key*, and then use that *Ion Key* to decrypt the actual data.
 
-This project is in the early development stages.
+# Ioncrypt File Format
+An Ioncrypt file is a binary file describing an Ion in a given solution.
+
+- 4-byte header of "NMHW" in ASCII
+- 8 bits of reserved space
+- 32 bits indicating the length of the encrypted Ion key
+- Enough bytes for the encrypted Ion Key
+- Hash of the source file when unencrypted (exactly long enough to store an SHA-256 hash)
+- Hash of the source file when encrypted (likewise)
+- 32 bits indicating the length of the Ion's path
+- The path, encoded as UTF-8
+- 64 bits indicating the UNIX time stamp at which the ion was added
+- 16 bits indicating the number of chunks
+- A list of encrypted chunks, where each chunk is:
+  - 16 bits indicating the length of the chunk data when encrypted
+  - Hash of the chunk when encrypted
+- 32 bits indicating the length of some application-specific metadata
+- Application-specific metadata
+- 8 bits of reserved space, filled with '\0'
+- An RSA Signature of the preceding data, signed with the *Solution Key*
+

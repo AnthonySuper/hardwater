@@ -5,6 +5,8 @@
 #include <memory>
 #include <cstdlib>
 #include <string>
+#include <vector>
+#include <cstdint>
 
 namespace Hardwater {
     class Key {
@@ -19,7 +21,10 @@ namespace Hardwater {
         };
         
         Key(std::string pathname, KeyType type, const char *password);
-    private:
+        
+        inline RSA* getKey() { return rsa.get(); }
+        
+    protected:
         KeyType type;
         std::shared_ptr<RSA> rsa;
     };
