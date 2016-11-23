@@ -8,11 +8,6 @@
 #include <openssl/err.h>
 #include <openssl/evp.h>
 
-void checkHashes(const std::vector<Hardwater::Chunk> &chunks) {
-    for(int i = 0; i < chunks.size(); ++i) {
-        std::cout << "Chunk #" << i << ": " << chunks.at(i).checkValidity() << std::endl;
-    }
-}
 
 int main(int argc, const char ** argv) {
     using std::cerr;

@@ -43,20 +43,21 @@ Owner nodes can then use their private key to decrypt the *Ion Key*, and then us
 An Ioncrypt file is a binary file describing an Ion in a given solution.
 
 - 4-byte header of "NMHW" in ASCII
-- 8 bits of reserved space
+- 8 bits indicating the current version of the protocol (currently `00000001`).
 - 32 bits indicating the length of the encrypted Ion key
-- Enough bytes for the encrypted Ion Key
-- Hash of the source file when unencrypted (exactly long enough to store an SHA-256 hash)
-- Hash of the source file when encrypted (likewise)
+- The encrypted Ion Key
+- SHA256 Hash of the source file when unencrypted
 - 32 bits indicating the length of the Ion's path
 - The path, encoded as UTF-8
 - 64 bits indicating the UNIX time stamp at which the ion was added
 - 16 bits indicating the number of chunks
 - A list of encrypted chunks, where each chunk is:
-  - 16 bits indicating the length of the chunk data when encrypted
+  - 32 bits indicating the index of the chunk, encrypted with the Ion Key
+  - 32 bits indicating the length of the chunk data when encrypted
   - Hash of the chunk when encrypted
 - 32 bits indicating the length of some application-specific metadata
 - Application-specific metadata
 - 8 bits of reserved space, filled with '\0'
 - An RSA Signature of the preceding data, signed with the *Solution Key*
 
+# Information Splitting

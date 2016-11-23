@@ -10,7 +10,10 @@ set(PROJECT_SRCS
   src/ion.cpp
   src/chunk.cpp
   src/solution.cpp
-  src/key.cpp)
+  src/key.cpp
+  src/ion_key.cpp
+  src/util.cpp
+  src/encrypted_ion_key.cpp)
 
 set(PROJECT_HEADERS
   include/mapped_file.hpp
@@ -18,7 +21,10 @@ set(PROJECT_HEADERS
   include/ion.hpp
   include/chunk.hpp
   include/solution.hpp
-  include/key.hpp)
+  include/key.hpp
+  include/ion_key.hpp
+  include/util.hpp
+  include/encrypted_ion_key.hpp)
 
 
 add_executable(app app.cpp
@@ -33,16 +39,25 @@ target_link_libraries(app ${OPENSSL_LIBRARIES})
 
 
 include_directories(include/)
-include_directories(lib/)
 
 
 set(PROJECT_TEST_SRCS
   test_srcs/ion_test.cpp
-  test_srcs/key_test.cpp)
+  test_srcs/key_test.cpp
+  test_srcs/ion_key_test.cpp
+  test_srcs/encrypted_ion_key_test.cpp
+  test_srcs/key_helpers.cpp)
+
+set(PROJECT_TEST_HEADERS
+  test_include/catch.hpp
+  test_include/key_helpers.hpp)
 
 add_executable(catch_test test_srcs/main.cpp 
   ${PROJECT_SRCS}
-  ${PROJECT_TEST_SRCS})
+  ${PROJECT_TEST_SRCS}
+  ${PROJECT_TEST_HEADERS})
+
+target_include_directories(catch_test PRIVATE test_include/)
 
 source_group("Test Files" FILES ${PROJECT_TEST_SRCS})
 

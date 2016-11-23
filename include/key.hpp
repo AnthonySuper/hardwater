@@ -24,6 +24,10 @@ namespace Hardwater {
         
         inline RSA* getKey() { return rsa.get(); }
         
+        inline bool isPublic() const { return type == KeyType::Public; }
+        
+        inline bool isPrivate() const { return type == KeyType::Private; }
+        
     protected:
         KeyType type;
         std::shared_ptr<RSA> rsa;

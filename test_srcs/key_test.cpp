@@ -1,5 +1,6 @@
 #include "catch.hpp"
 #include "key.hpp"
+#include "key_helpers.hpp"
 
 TEST_CASE("Basic extraction") {
     OpenSSL_add_all_ciphers();
@@ -17,7 +18,6 @@ TEST_CASE("Basic extraction") {
             auto keyType = Hardwater::Key::KeyType::Private;
             REQUIRE_NOTHROW(Hardwater::Key(path, keyType, pp));
         }
-         
         
     }
     
@@ -33,5 +33,14 @@ TEST_CASE("Basic extraction") {
             REQUIRE_THROWS_AS(Hardwater::Key(path, keyType, ""),
                               Hardwater::Key::ReadError);
         }
+    }
+}
+
+TEST_CASE("Helpers") {
+    SECTION("Public helper") {
+        REQUIRE_NOTHROW(TestHelpers::getDefaultPublicKey());
+    }
+    SECTION("Private helper") {
+        REQUIRE_NOTHROW(TestHelpers::getDefaultPrivateKey());
     }
 }

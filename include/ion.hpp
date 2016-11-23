@@ -2,74 +2,34 @@
 #define _HARDWATER_ION_HPP
 #include <string>
 #include <vector>
+#include <memory>
 #include "fragment_hash.hpp"
 #include "mapped_file.hpp"
 #include "chunk.hpp"
+#include "key.hpp"
+#include "ion_key.hpp"
+
 
 namespace Hardwater {
     class Ion {
     public:
-        /**
-         * Create an ion from an existing mapped file.
-         */
-        Ion(std::unique_ptr<MappedFile>&& f);
+        Ion(MappedFile &mf, Key& k);
         
-        /**
-         * Create an empty ion, typically used to
-         */
-        Ion();
-        
-        inline const MappedFile& getFile() { return *file; }
-        
-        inline ssize_t getChunkSize() const { return chunkSize; }
-        
-        inline size_t getNumChunks() const {
-            return (file->getSize() + chunkSize - 1) / chunkSize;
-        }
-        
-        inline FragmentHash getOverallHash() const
-        {
-            return *overallHash;
-        }
-        
-        inline const std::vector<Chunk>& getChunks() const
-        {
-            return chunks;
-        }
-        
-        inline std::vector<Chunk> getChunks()
-        {
-            return chunks;
-        }
-        
-        inline size_t setChunkSize(size_t chunkSize) {
-            return this->chunkSize = chunkSize;
-        }
-        
-        inline void setOverallHash(FragmentHash oh) {
-            overallHash = std::make_unique<FragmentHash>(oh);
-        }
-        
-        bool checkValidity();
-        
-        inline void setFile(std::unique_ptr<MappedFile> f) {
-            file = std::move(f);
-        }
-        
-        void createChunks(const std::vector<FragmentHash>& hash);
-        
-        void generate();
+        size_t chunkSize();
         
     protected:
-        std::unique_ptr<MappedFile> file;
-        ssize_t chunkSize = -1;
-    private:
-        void determineChunkSize();
-        std::vector<Chunk> chunks;
-        std::unique_ptr<FragmentHash> overallHash;
-        std::pair<MappedFile::iterator, MappedFile::iterator> getChunkBoundary(int chunkNum);
-        void checkFile();
         
+        std::tuple<MappedFile::iterator, MappedFile::iterator>
+        chunkBoundaries(MappedFile& f, int num);
+        
+        
+        size_t fileSize;
+        
+        size_t determineChunkNumber(size_t size);
+        
+        size_t numChunks;
+        
+        std::vector<Chunk> chunks;
     };
 }
 #endif

@@ -2,53 +2,25 @@
 #define _HARDWATER_CHUNK_HPP
 #include "fragment_hash.hpp"
 #include "mapped_file.hpp"
+#include "ion_key.hpp"
 #include <vector>
+#include <cstdint>
+#include <memory>
 
 namespace Hardwater {
     class Chunk {
     public:
-        Chunk(const FragmentHash& hash);
+        /**
+         * Create a chunk from a given slice of a plaintext file.
+         */
         Chunk(MappedFile::iterator begin,
-              MappedFile::iterator end);
+              MappedFile::iterator end,
+              IonKey k,
+              uint16_t idx);
+    protected:
+        uint16_t index;
         
-        void addFile(MappedFile::iterator begin,
-                     MappedFile::iterator end);
-        
-        bool checkValidity() const;
-        
-        void writeOut(const std::vector<uint8_t>& bytes);
-        
-        inline FragmentHash getHash() {
-            return hash;
-        }
-        
-        inline const FragmentHash& getHash() const {
-            return hash;
-        }
-        
-        inline MappedFile::iterator begin() {
-            return beginItr;
-        }
-        
-        inline MappedFile::iterator end() {
-            return endItr;
-        }
-        
-        inline MappedFile::const_iterator begin() const {
-            return static_cast<MappedFile::const_iterator>(beginItr);
-        }
-        
-        inline MappedFile::const_iterator end() const {
-            return static_cast<MappedFile::const_iterator>(endItr);
-        }
-        
-        std::vector<uint8_t> getData() const;
-        
-    private:
-        FragmentHash hash;
-        MappedFile::iterator beginItr;
-        MappedFile::iterator endItr;
-        void checkFile() const;
     };
 }
+
 #endif
