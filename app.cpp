@@ -14,7 +14,9 @@ int main(int argc, const char ** argv) {
     using std::cout;
     using std::endl;
     OpenSSL_add_all_algorithms();
-    Hardwater::Key key("test_files/keys/generic.pem", Hardwater::Key::KeyType::Private, "passphrase");
+    Hardwater::Key key("test_files/keys/generic.pem",
+                       Hardwater::Key::KeyType::Private,
+                       "passphrase");
     RSA *r = key.getKey();
     auto res = RSA_size(r);
     std::cout << "Rsa size is " << res << std::endl;

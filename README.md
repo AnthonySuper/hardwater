@@ -47,8 +47,8 @@ An Ioncrypt file is a binary file describing an Ion in a given solution.
 - 32 bits indicating the length of the encrypted Ion key
 - The encrypted Ion Key
 - SHA256 Hash of the source file when unencrypted
-- 32 bits indicating the length of the Ion's path
-- The path, encoded as UTF-8
+- 32 bits indicating the length of the Ion's path when encrypted with the Ion key
+- The path, encoded as UTF-8 and encrypted with the Ion key
 - 64 bits indicating the UNIX time stamp at which the ion was added
 - 16 bits indicating the number of chunks
 - A list of encrypted chunks, where each chunk is:

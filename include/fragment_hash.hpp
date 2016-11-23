@@ -7,6 +7,7 @@
 #include <sstream>
 #include <cstdint>
 #include <iomanip>
+#include <vector>
 
 namespace Hardwater {
     class FragmentHash {
@@ -21,6 +22,24 @@ namespace Hardwater {
             SHA256_Update(&ctx, begin, end - begin);
             SHA256_Final(hash.data(), &ctx);
         }
+        
+        template<typename T>
+        FragmentHash(T *ptr, size_t size)
+        : FragmentHash(ptr, ptr + size)
+        {
+            
+        }
+        
+        template<typename T>
+        FragmentHash(std::vector<T> vec,
+                     typename std::enable_if<sizeof(T) == 1, int>::type t = 0)
+        : FragmentHash(vec.data(), vec.size())
+        {
+        }
+        
+        FragmentHash(std::vector<uint8_t>::iterator begin,
+                     std::vector<uint8_t>::iterator end);
+        
         
         std::string getDigest();
         

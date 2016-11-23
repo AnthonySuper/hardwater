@@ -9,17 +9,22 @@
 
 namespace Hardwater {
     class Chunk {
-    public:
-        /**
-         * Create a chunk from a given slice of a plaintext file.
-         */
-        Chunk(MappedFile::iterator begin,
-              MappedFile::iterator end,
-              IonKey k,
-              uint16_t idx);
-    protected:
-        uint16_t index;
         
+        struct EncryptedIndex {
+            EncryptedIndex(size_t idx, IonKey& k);
+            std::vector<uint8_t> encrypted;
+        };
+        
+    public:
+        static Chunk generate(MappedFile::iterator begin,
+                              MappedFile::iterator end,
+                              IonKey& key,
+                              size_t index);
+        Chunk(size_t size, EncryptedIndex index, FragmentHash hash);
+    protected:
+        size_t size;
+        FragmentHash hash;
+        EncryptedIndex index;
     };
 }
 

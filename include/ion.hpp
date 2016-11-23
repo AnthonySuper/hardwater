@@ -3,33 +3,39 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <future>
 #include "fragment_hash.hpp"
 #include "mapped_file.hpp"
 #include "chunk.hpp"
 #include "key.hpp"
 #include "ion_key.hpp"
+#include "encrypted_ion_key.hpp"
+#include "util.hpp"
 
 
 namespace Hardwater {
     class Ion {
     public:
-        Ion(MappedFile &mf, Key& k);
+        static Ion generate(MappedFile &mf, Key& pub);
         
         size_t chunkSize();
         
+        Ion(size_t fileSize,
+            size_t numChunks,
+            FragmentHash hash,
+            std::vector<Chunk>&& chunks);
+        
+        
     protected:
-        
-        std::tuple<MappedFile::iterator, MappedFile::iterator>
-        chunkBoundaries(MappedFile& f, int num);
-        
+        FragmentHash hash;
         
         size_t fileSize;
-        
-        size_t determineChunkNumber(size_t size);
         
         size_t numChunks;
         
         std::vector<Chunk> chunks;
+        
+        
     };
 }
 #endif

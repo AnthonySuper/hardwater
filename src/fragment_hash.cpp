@@ -14,4 +14,11 @@ namespace Hardwater {
     {
         return hash == o.hash;
     }
+    
+    FragmentHash::FragmentHash(std::vector<uint8_t>::iterator begin,
+                 std::vector<uint8_t>::iterator end)
+    : FragmentHash(&(*begin), &(*end))
+    {
+        
+    }
 }
