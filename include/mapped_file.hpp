@@ -6,6 +6,7 @@
 #include <string>
 #include <cstdint>
 #include <stdexcept>
+#define _POISX_C_SOURCE
 #include <sys/stat.h>
 
 namespace Hardwater {
@@ -40,12 +41,23 @@ namespace Hardwater {
         inline const_iterator end() const {
             return static_cast<const_iterator>(mapped_mem);
         }
+        
+        inline time_t getTimestamp() const {
+            return timestamp;
+        }
+        
+        inline const std::string& getFileName() const {
+            return fileName;
+        }
+        
 
         ~MappedFile();
     protected:
-       FILE *fp;
-       void *mapped_mem;
-       size_t size;
+        FILE *fp;
+        void *mapped_mem;
+        size_t size;
+        time_t timestamp;
+        const std::string fileName;
     };
 }
 #endif

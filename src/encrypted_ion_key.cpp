@@ -1,5 +1,5 @@
 #include "encrypted_ion_key.hpp"
-
+#include <iostream>
 namespace Hardwater {
     EncryptedIonKey::EncryptedIonKey(IonKey &ik, Key &k)
     {
@@ -42,6 +42,7 @@ namespace Hardwater {
         if(res == -1) {
             handleSSLError();
         }
+        std::cout << "res is " << res << std::endl;
         buff.resize(res);
         IonKey::KeyBuffer keyBuff;
         IonKey::IVPBuffer ivpBuff;
@@ -53,6 +54,15 @@ namespace Hardwater {
                   b2 + IonKey::IVPLength,
                   ivpBuff.begin());
         return IonKey(keyBuff, ivpBuff);
+    }
+    
+    EncryptedIonKey::EncryptedIonKey(uint8_t size,
+                                     std::vector<uint8_t>::iterator& it)
+    {
+        for(int i = 0; i < size; ++i) {
+            encrypted.push_back(*it);
+            ++it;
+        }
     }
     
     void EncryptedIonKey::handleSSLError()

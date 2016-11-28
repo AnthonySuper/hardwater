@@ -26,6 +26,35 @@ namespace Hardwater {
         size(s), hash(hsh), index(id)
     {
     }
+    
+    
+    static std::array<uint8_t, 4> writeLen(size_t in)
+    {
+        if(in > std::numeric_limits<uint32_t>::max()) {
+            throw std::runtime_error("Chunk is too large");
+        }
+        std::array<uint8_t, 4> tmp;
+        *(reinterpret_cast<uint32_t*>(tmp.data())) = in;
+        return tmp;
+    }
+    
+    void Chunk::writeTo(std::vector<uint8_t> &buff)
+    {
+        if(index.encrypted.size() != 4) {
+            throw std::runtime_error("Houstin, we have an issue");
+        }
+        // Index of the chunk, encrypted with the Ion key
+        buff.insert(buff.end(),
+                    index.encrypted.begin(),
+                    index.encrypted.end());
+        // Length of chunk when encrypted
+        auto wl = writeLen(size);
+        buff.insert(buff.end(),
+                    wl.begin(),
+                    wl.end());
+        // Hash of the chunk (when data is encrypted)
+        hash.appendToBuffer(buff);
+    }
 }
 
 

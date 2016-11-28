@@ -21,4 +21,9 @@ namespace Hardwater {
     {
         
     }
+    
+    void FragmentHash::appendToBuffer(std::vector<uint8_t> &b) const
+    {
+        b.insert(b.end(), hash.begin(), hash.end());
+    }
 }

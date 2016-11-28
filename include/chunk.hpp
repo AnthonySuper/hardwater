@@ -21,6 +21,9 @@ namespace Hardwater {
                               IonKey& key,
                               size_t index);
         Chunk(size_t size, EncryptedIndex index, FragmentHash hash);
+        
+        void writeTo(std::vector<uint8_t> &buff);
+        
     protected:
         size_t size;
         FragmentHash hash;

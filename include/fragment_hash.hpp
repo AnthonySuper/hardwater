@@ -8,10 +8,23 @@
 #include <cstdint>
 #include <iomanip>
 #include <vector>
+#include <iterator>
 
 namespace Hardwater {
     class FragmentHash {
     public:
+        using HashArray = std::array<unsigned char, SHA256_DIGEST_LENGTH>;
+        
+        template<typename Itr>
+        FragmentHash(Itr &in,
+                     typename std::enable_if<sizeof(*in) == 1, bool>::type t = true)
+        {
+            for(int i = 0; i < hash.size(); ++i) {
+                hash[i] = *in;
+                in++;
+            }
+        }
+        
         
         template<typename Itr>
         FragmentHash(Itr begin, Itr end)
@@ -43,6 +56,16 @@ namespace Hardwater {
         
         std::string getDigest();
         
+        HashArray getHash() {
+            return hash;
+        }
+        
+        const HashArray& getHash() const {
+            return hash;
+        }
+        
+        void appendToBuffer(std::vector<uint8_t> &buff) const;
+        
         bool operator==(const FragmentHash& o);
         
         template<typename Itr>
@@ -52,7 +75,7 @@ namespace Hardwater {
         }
         
     protected:
-        std::array<unsigned char, SHA256_DIGEST_LENGTH> hash;
+        HashArray hash;
     };
 }
 #endif

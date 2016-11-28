@@ -3,9 +3,20 @@
 
 namespace Hardwater {
     
+#ifdef __APPLE__
+    static time_t getModified(struct stat *s) {
+        return s->st_mtimespec.tv_sec;
+    }
+#else
+    static time_t getModified(struct stat *s) {
+        return s->st_mtime;
+    }
+#endif
+    
     MappedFile::MappedFile(std::string str, size_t s)
+    : fileName(str)
     {
-        std::cout << str << std::endl;
+        
         fp = fopen(str.c_str(), "r+");
         if(fp == nullptr) {
             if(errno == ENOENT) {
@@ -19,6 +30,7 @@ namespace Hardwater {
             struct stat st;
             fstat(fileno(fp), &st);
             size = st.st_size;
+            timestamp = getModified(&st);
         }
         else {
             size = s;

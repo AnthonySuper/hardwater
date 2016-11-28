@@ -10,10 +10,21 @@ namespace Hardwater {
         
     public:
         EncryptedIonKey(IonKey &ik, Key &k);
+        
+        EncryptedIonKey(uint8_t size,
+                        std::vector<uint8_t>::iterator& input);
+        
         IonKey decrypt(Key &k);
+        
         constexpr static int Padding = RSA_PKCS1_OAEP_PADDING;
+        
+        const std::vector<IonKey::ByteType>& getEncrypted() const {
+            return encrypted;
+        }
+        
     private:
         std::vector<IonKey::ByteType> encrypted;
+        
         void handleSSLError();
     };
 }

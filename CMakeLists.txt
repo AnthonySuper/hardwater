@@ -13,7 +13,8 @@ set(PROJECT_SRCS
   src/key.cpp
   src/ion_key.cpp
   src/util.cpp
-  src/encrypted_ion_key.cpp)
+  src/encrypted_ion_key.cpp
+  src/sqlite3.c)
 
 set(PROJECT_HEADERS
   include/mapped_file.hpp
@@ -24,8 +25,8 @@ set(PROJECT_HEADERS
   include/key.hpp
   include/ion_key.hpp
   include/util.hpp
-  include/encrypted_ion_key.hpp)
-
+  include/encrypted_ion_key.hpp
+  include/sqlite3.h)
 
 add_executable(app app.cpp
   ${PROJECT_SRCS} 
@@ -35,11 +36,11 @@ find_package(OpenSSL REQUIRED)
 include_directories(${OPENSSL_INCLUDE_DIR})
 target_link_libraries(app ${OPENSSL_LIBRARIES})
 
-
-
+find_package(Boost REQUIRED COMPONENTS system)
+include_directories(${Boost_INCLUDE_DIR})
+link_libraries(${Boost_LIBRARIES})
 
 include_directories(include/)
-
 
 set(PROJECT_TEST_SRCS
   test_srcs/ion_test.cpp
