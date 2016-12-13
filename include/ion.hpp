@@ -14,13 +14,22 @@
 
 
 namespace Hardwater {
+    /**
+     * Ions in harwater represent a single file in a solution at a given point in time.
+     * They do this according to the Ion specification, which you can see in the README.
+     */
     class Ion {
     public:
-        using FileBuffer = std::vector<uint8_t>;
         
+        /**
+         * Generate an Ion for a solution using the Solution's public key.
+         */
         static Ion generate(MappedFile &mf, Key& pub);
         
-        static Ion fromBuff(FileBuffer &buff);
+        /**
+         * Read an Ion from a buffer.
+         */
+        static Ion fromBuff(std::vector<uint8_t> &buff, Key &pub);
         
         size_t chunkSize();
         
@@ -31,7 +40,11 @@ namespace Hardwater {
             FragmentHash hash,
             std::vector<Chunk>&& chunks);
         
+        /**
+         * Generate a dissolved ion by signing an existing Ion with a solution key.
+         */
         std::vector<uint8_t> dissolve(Key& sign);
+        
         
         static constexpr uint8_t protocolVersion = 1;
         

@@ -20,6 +20,9 @@ namespace Hardwater {
                               MappedFile::iterator end,
                               IonKey& key,
                               size_t index);
+        
+        static Chunk read(std::vector<uint8_t>::iterator &it);
+        
         Chunk(size_t size, EncryptedIndex index, FragmentHash hash);
         
         void writeTo(std::vector<uint8_t> &buff);

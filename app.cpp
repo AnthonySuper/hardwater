@@ -14,6 +14,7 @@ int main(int argc, const char ** argv) {
     using std::cout;
     using std::endl;
     OpenSSL_add_all_algorithms();
+    Hardwater::MappedFile f("wow");
     Hardwater::Key key("test_files/keys/generic.pem",
                        Hardwater::Key::KeyType::Private,
                        "passphrase");

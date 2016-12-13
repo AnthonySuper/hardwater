@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <array>
 #include <vector>
+#include <string>
 #include "util.hpp"
 
 namespace Hardwater {
@@ -76,6 +77,8 @@ namespace Hardwater {
             EVP_CIPHER_CTX_free(ctx);
             return ret;
         }
+        
+        std::vector<ByteType> encrypt(std::string str);
         
         template<typename Itr>
         std::vector<ByteType> decrypt(Itr begin, Itr end)

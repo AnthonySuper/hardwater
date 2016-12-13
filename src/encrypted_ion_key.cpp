@@ -56,13 +56,10 @@ namespace Hardwater {
         return IonKey(keyBuff, ivpBuff);
     }
     
-    EncryptedIonKey::EncryptedIonKey(uint8_t size,
-                                     std::vector<uint8_t>::iterator& it)
-    {
-        for(int i = 0; i < size; ++i) {
-            encrypted.push_back(*it);
-            ++it;
-        }
+    EncryptedIonKey::EncryptedIonKey(std::vector<uint8_t>::const_iterator begin,
+                                     std::vector<uint8_t>::const_iterator end) :
+    encrypted(begin, end) {
+        
     }
     
     void EncryptedIonKey::handleSSLError()

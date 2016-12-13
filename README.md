@@ -2,7 +2,7 @@
 
 Hardwater is a distributed file sharing system, similar to bittorent sync.
 
-
+*Hardwater is currently "on the backburner" while I try to figure out some issues with maintaining consistency when a file is updated from two nodes at once.*
 ## Structure
 
 Hardwater consists of Ions in a Solution.

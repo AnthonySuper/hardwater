@@ -21,18 +21,36 @@ namespace Hardwater {
         }
     }
     
-    static uint64_t slurpSize(Ion::FileBuffer::iterator &it)
+    static uint64_t slurpSize(std::vector<uint8_t>::iterator &it)
     {
-        std::array<uint8_t, 8> arr;
-        for(int i = 0; i < 8; ++i) {
-            arr[i] = *it;
-            it++;
-        }
-        return *(reinterpret_cast<uint64_t*>(arr.data()));
+        // Maybe not stands
+        uint64_t ret;
+        ret = *(reinterpret_cast<uint64_t*>(&*it));
+        it += 8;
+        return ret;
     }
     
-    Ion Ion::fromBuff(FileBuffer &buff)
+    static uint32_t slurpSmallerSize(std::vector<uint8_t>::iterator &it)
     {
+        uint32_t ret;
+        ret = *(reinterpret_cast<uint32_t*>(&*it));
+        it += 4;
+        return ret;
+    }
+    
+    static uint16_t slurpSmallestSize(std::vector<uint8_t>::iterator &it)
+    {
+        uint16_t ret;
+        ret = *(reinterpret_cast<uint16_t*>(&*it));
+        it += 2;
+        return ret;
+    }
+    
+    Ion Ion::fromBuff(std::vector<uint8_t> &buff, Key &pub)
+    {
+        if(pub.isPrivate()) {
+            throw std::invalid_argument("Cannot verify with a private key");
+        }
         const char *head = "NMTT";
         auto itr = buff.begin();
         if(! std::equal(itr,
@@ -47,9 +65,20 @@ namespace Hardwater {
         uint8_t keySize = *itr;
         itr++;
         // Slurp encrypted ion key
-        EncryptedIonKey ik(keySize, itr);
+        EncryptedIonKey ik(itr, itr + keySize);
+        itr += keySize;
         size_t fsize = slurpSize(itr);
         FragmentHash h(itr);
+        size_t strLen = slurpSmallerSize(itr);
+        std::vector<uint8_t> encryptedFileName(itr, itr + strLen);
+        itr += strLen;
+        size_t timestamp = slurpSize(itr);
+        std::vector<Chunk> chunks;
+        size_t numChunks = slurpSmallestSize(itr);
+        for(int i = 0; i < numChunks; i++) {
+            chunks.emplace_back(Chunk::read(itr));
+        }
+        
     }
     
     Ion Ion::generate(MappedFile &mf,
@@ -61,7 +90,7 @@ namespace Hardwater {
         FragmentHash hash(mf.begin(), mf.end());
         IonKey ik;
         auto fn = mf.getFileName();
-        auto efn = ik.encrypt(fn.begin(), fn.end());
+        auto efn = ik.encrypt(fn);
         EncryptedIonKey ek(ik, pub);
         size_t numChunks = determineChunkNumber(mf.getSize());
         size_t chunkSize = mf.getSize() / numChunks;
@@ -87,15 +116,16 @@ namespace Hardwater {
              FragmentHash overall,
              std::vector<Chunk>&& chunks)
     : ionKey(ik),
-        fileSize(fs),
         encryptedFileName(fn),
         hash(overall),
+        fileSize(fs),
         numChunks(nc),
         chunks(chunks)
     {
         
     }
     
+    // TODO: Actually sign the code
     std::vector<uint8_t> Ion::dissolve(Hardwater::Key &sign) {
         if(sign.isPublic()) {
             throw std::runtime_error("Type mismatch, privage key is public");
@@ -139,6 +169,7 @@ namespace Hardwater {
             buff.emplace_back(0);
         }
         buff.emplace_back(0);
+        // TODO: Add stuff
         return buff;
     }
     

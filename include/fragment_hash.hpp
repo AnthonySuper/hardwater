@@ -15,6 +15,10 @@ namespace Hardwater {
     public:
         using HashArray = std::array<unsigned char, SHA256_DIGEST_LENGTH>;
         
+        /**
+         * Slurp an existing fragment hash.
+         * Used primarily to read Ions.
+         */
         template<typename Itr>
         FragmentHash(Itr &in,
                      typename std::enable_if<sizeof(*in) == 1, bool>::type t = true)
